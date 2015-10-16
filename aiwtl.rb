@@ -32,7 +32,7 @@ class AIWTL
 		today_worked_hours = daily_hours(today)
 
 		if diff > 0
-			puts "Yes, you're working too long. You've got spare #{hours_and_minutes(diff)} until yestarday."
+			puts "Yes, you're working too long. You've got spare #{hours_and_minutes(diff)} until yesterday."
 		else
 			puts "No, you're not working too long. You need #{hours_and_minutes(-diff)} more."
 		end
