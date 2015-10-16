@@ -11,7 +11,13 @@ class AIWTL
 		create_headers		
 	end
 
-	def am_i_working_too_long?(start_date)
+	def am_i_working_too_long?(given_start_date)
+    if @start_date.nil? && given_start_date.nil?
+      fail 'You need to specify start date either as a param or in a config file.'
+    end
+
+    start_date = given_start_date || @start_date 
+
 		today = Date.today
 		end_date = today - 1
 		
@@ -60,9 +66,10 @@ class AIWTL
 
 	def hours_and_minutes(hours_fraction)
 		hours = hours_fraction.floor
-		minutes = (hours_fraction % 1.0 * 60).round 
+		minutes = (hours_fraction % 1.0 * 60).round  
+    minutes_str = format('%02d', minutes)
 
-		"#{hours}:#{minutes} h"
+		"#{hours}:#{minutes_str} h"
 	end
 
 	def parse_config
@@ -73,6 +80,7 @@ class AIWTL
 		@user = config['user']
 		@pass = config['pass']
 		@hours_per_working_day = config['hours_per_working_day'].to_f
+    @start_date = Date.parse(config['start_date']) if config['start_date']
 	end
 
 	def create_headers
@@ -87,6 +95,11 @@ class AIWTL
 	end
 end
 
-start_date = Date.parse(ARGV[0])
+start_date = nil
+
+if ARGV.size == 1
+  start_date = Date.parse(ARGV[0])
+end
+
 aiwtl = AIWTL.new
 aiwtl.am_i_working_too_long?(start_date)
